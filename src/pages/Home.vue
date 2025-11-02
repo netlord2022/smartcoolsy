@@ -1,6 +1,6 @@
 <template>
   <!-- قسم الهيرو -->
-  <section class="hero">
+  <section class="hero bg-hero">
     <div class="container mx-auto">
       <h1>الحلول المتكاملة لتجهيزات الفنادق والمطاعم</h1>
       <router-link to="/products" class="btn">استعرض المنتجات</router-link>
@@ -9,48 +9,13 @@
 
   <!-- قسم المنتجات -->
   <section class="products">
-    <div class="container mx-auto">
+    <div class="container mx-auto px-6 sm:px-1">
       <div class="section-title">
         <h2>فئات المنتجات</h2>
         <p>اكتشف مجموعتنا الواسعة من تجهيزات المطاعم والفنادق</p>
       </div>
       <div class="product-categories">
-        <div class="category">
-          <div class="category-img">
-            <font-awesome-icon icon="fa-solid fa-door-closed" />
-          </div>
-          <div class="category-content">
-            <h3>البرادات</h3>
-            <p>برادات مسطحة، عمودية، وواجهة زجاجية بمواصفات عالية الجودة</p>
-          </div>
-        </div>
-        <div class="category">
-          <div class="category-img">
-            <font-awesome-icon :icon="['fas', 'utensils']" />
-          </div>
-          <div class="category-content">
-            <h3>عدة المطبخ</h3>
-            <p>أدوات وأجهزة المطبخ الاحترافية للمطاعم والفنادق</p>
-          </div>
-        </div>
-        <div class="category">
-          <div class="category-img">
-            <font-awesome-icon :icon="['fas', 'glass-whiskey']" />
-          </div>
-          <div class="category-content">
-            <h3>ماكينات السلاش والثلج</h3>
-            <p>أفضل ماكينات صنع الثلج والسلاش للمشروبات الباردة</p>
-          </div>
-        </div>
-        <div class="category">
-          <div class="category-img">
-            <font-awesome-icon icon="fa-solid fa-fire-burner" />
-          </div>
-          <div class="category-content">
-            <h3>الشوايات والقلايات</h3>
-            <p>شوايات الشاورما والبروستد وقلايات البطاطس بأنواعها</p>
-          </div>
-        </div>
+        <ProductCard v-for="product in products" :key="product.title" :product="product" />
       </div>
     </div>
   </section>
@@ -59,8 +24,8 @@
   <section class="features">
     <div class="container mx-auto">
       <div class="section-title">
-        <h2>لماذا تختار SmartCoolsy؟</h2>
-        <p>نحن نقدم حلولاً متكاملة وخدمة مميزة لعملائنا</p>
+        <h2 class="text-white">لماذا تختار SmartCoolsy؟</h2>
+        <p class="text-gray-400">نحن نقدم حلولاً متكاملة وخدمة مميزة لعملائنا</p>
       </div>
       <div class="features-grid">
         <div class="feature">
@@ -97,16 +62,16 @@
       <div class="contact-form">
         <form @submit.prevent="submitForm">
           <div class="form-group">
-            <label for="name">الاسم الكامل</label>
-            <input type="text" v-model="form.name" required />
+            <label for="name">*الاسم الكامل</label>
+            <input type="text" v-model="contactName" required />
           </div>
           <div class="form-group">
-            <label for="phone">رقم الجوال</label>
-            <input type="tel" v-model="form.phone" required />
+            <label for="phone">الايميل</label>
+            <input type="email" v-model="email" />
           </div>
           <div class="form-group">
-            <label for="message">الرسالة</label>
-            <textarea v-model="form.message" required></textarea>
+            <label for="message">*الرسالة</label>
+            <textarea v-model="message" required></textarea>
           </div>
           <button type="submit" class="submit-btn">إرسال الرسالة</button>
         </form>
@@ -116,37 +81,74 @@
 </template>
 
 <script setup>
-import { reactive } from "vue"
+import { ref, computed } from "vue"
+import ProductCard from "../components/ProductCard.vue"
+const products = computed(() => [
+  {
+    title: "البرادات",
+    subtitle: "برادات مسطحة، عمودية، وواجهة زجاجية بمواصفات عالية الجودة",
+    icon: "fa-solid fa-door-closed",
+    bgClass: "bg-cooler-hero",
+    img: "/cooler-hero.webp",
+  },
+  {
+    title: "عدة المطبخ",
+    subtitle: "أدوات وأجهزة المطبخ الاحترافية للمطاعم والفنادق",
+    icon: "fa-solid fa-utensils",
+    bgClass: "bg-kitchen-tools-hero",
+    img: "/kitchen-tools-hero.webp",
+  },
+  {
+    title: "ماكينات السلاش والثلج",
+    subtitle: "ماكينات السلاش والثلج الاحترافية للمطاعم والفنادق",
+    icon: "fa-solid fa-ice-cream",
+    bgClass: "bg-slash-machine-hero",
+    img: "/slash-machine-hero.webp",
+  },
+  {
+    title: "الشوايات والمقلايات",
+    subtitle: "الشوايات والمقلايات الاحترافية للمطاعم والفنادق",
+    icon: "fa-solid fa-fire-burner",
+    bgClass: "bg-fryer-hero",
+    img: "/fryer-hero.webp",
+  },
+])
 
-const form = reactive({
-  name: "",
-  phone: "",
-  message: "",
-})
+const contactName = ref("")
+const email = ref("")
+const message = ref("")
 
 function submitForm() {
-  alert(`شكراً ${form.name}، تم استلام رسالتك!`)
-  form.name = ""
-  form.phone = ""
-  form.message = ""
+  if (!message.value || !contactName.value) {
+    return
+  }
+  const fullMessage = encodeURIComponent(
+    `مرحباً، أنا ${contactName.value}%0Aالبريد الإلكتروني: ${email.value}%0Aالرسالة: ${message.value}`
+  )
+
+  const url = `https://wa.me/963944590519?text=${fullMessage}`
+  window.open(url, "_blank")
+  alert(`شكراً ${contactName.value}، تم استلام رسالتك!`)
+  // reset the form
+  contactName.value = ""
+  email.value = ""
+  message.value = ""
 }
 </script>
 <style scoped>
 /* قسم الهيرو */
 .hero {
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80");
   background-size: cover;
   background-position: center;
   color: white;
   text-align: center;
-  padding: 100px 20px;
+  padding: 130px 20px;
 }
 
 .hero h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
+  text-shadow: 0px 2px 5px black;
 }
 
 .hero p {
@@ -182,12 +184,10 @@ function submitForm() {
 
 .section-title h2 {
   font-size: 2rem;
-  color: #1a3a5f;
   margin-bottom: 15px;
 }
 
 .section-title p {
-  color: #666;
   max-width: 700px;
   margin: 0 auto;
 }
@@ -196,37 +196,6 @@ function submitForm() {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
-}
-
-.category {
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
-}
-
-.category:hover {
-  transform: translateY(-10px);
-}
-
-.category-img {
-  height: 200px;
-  background-color: #f1f1f1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-  color: #1a3a5f;
-}
-
-.category-content {
-  padding: 20px;
-}
-
-.category-content h3 {
-  margin-bottom: 10px;
-  color: #1a3a5f;
 }
 
 /* قسم المميزات */

@@ -1,7 +1,7 @@
 <template>
   <!-- الفوتر -->
   <footer>
-    <div class="container mx-auto">
+    <div class="container mx-auto px-4 sm:px-0">
       <div class="footer-content">
         <div class="footer-column">
           <h3>SmartCoolsy</h3>
