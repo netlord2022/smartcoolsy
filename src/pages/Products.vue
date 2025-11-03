@@ -1,7 +1,13 @@
 <template>
   <div class="py-10 bg-gray-50 min-h-screen">
+    <section class="hero bg-products-hero bg-cover">
+      <div class="container mx-auto">
+        <h1>جميع منتجاتنا</h1>
+        <p>استعرض جميع تجهيزات المطاعم والفنادق بأعلى معايير الجودة والكفاءة</p>
+      </div>
+    </section>
     <!-- Header -->
-    <div class="text-center mb-8">
+    <div class="text-center my-8">
       <h2 class="text-3xl font-bold text-gray-800 mb-2">تصنيفات المنتجات</h2>
       <p class="text-gray-500">اختر التصنيف الذي يناسب احتياجاتك</p>
     </div>
@@ -9,7 +15,7 @@
     <!-- Filters -->
     <div class="flex flex-wrap justify-center gap-3 mb-10">
       <button
-        v-for="filter in filters2"
+        v-for="filter in filters"
         :key="filter.name"
         @click="selectedFilter = filter.name"
         class="px-5 py-2 rounded-full flex items-center gap-2 font-medium transition-all cursor-pointer"
@@ -26,25 +32,25 @@
 
     <!-- Products Grid -->
     <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 px-6 md:px-16">
-      <div
+      <!--   <div
         v-for="product in filteredProducts"
         :key="product.title"
         class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col justify-between text-center hover:shadow-md transition"
       >
-        <!-- Icon -->
+
         <div class="text-blue-900 text-5xl mb-4">
           <div class="category-img">
             <font-awesome-icon :icon="product.icon" />
           </div>
         </div>
 
-        <!-- Info -->
+   
         <div>
           <h3 class="font-semibold text-lg text-gray-800 mb-2">{{ product.title }}</h3>
           <p class="text-gray-600 text-sm mb-4 leading-relaxed">{{ product.description }}</p>
         </div>
 
-        <!-- Button -->
+
         <a
           href="https://wa.me/963944590519"
           class="whatsapp-btn self-center text-lg w-10 h-10 rounded-full flex items-center justify-center bg-green-400"
@@ -52,102 +58,37 @@
         >
           <font-awesome-icon :icon="['fab', 'whatsapp']" />
         </a>
-      </div>
+      </div> -->
+
+      <ProductCard
+        v-for="product in filteredProducts"
+        :key="product.name"
+        :product="product"
+        :name="product.name"
+        :title="product.title"
+        :description="product.description"
+        :category="product.category"
+        :icon="product.icon"
+        :img="product.img"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue"
-
-const filters = [
-  { name: "all", label: "الكل", icon: "fa-th-large" },
-  { name: "coolers", label: "البرادات", icon: "fa-snowflake" },
-  { name: "kitchen", label: "عدة المطبخ", icon: "fa-kitchen-set" },
-  { name: "ice", label: "ماكينات السلاش والثلج", icon: "fa-ice-cream" },
-  { name: "grills", label: "الشوايات والمقلايات", icon: "fa-fire" },
-]
-
+import ProductCard from "../components/ProductCard.vue"
 const selectedFilter = ref("all")
 
 const products = [
-  {
-    title: "براد عمودي 2 متر",
-    category: "coolers",
-    description: "براد عمودي بمساحة تخزين كبيرة، مناسب للمطاعم الكبيرة",
-    icon: ["fas", "door-closed"],
-  },
-  {
-    title: "براد واجهة زجاجية",
-    category: "coolers",
-    description: "براد عرض بواجهة زجاجية شفافة، مثالي لعرض المشروبات والحلويات",
-    icon: ["fas", "door-closed"],
-  },
-  {
-    title: "براد مسطح 1.5 متر",
-    category: "coolers",
-    description: "براد مسطح بتصميم عصري وسعة كبيرة، مناسب للمطاعم والمقاهي",
-    icon: ["fas", "door-closed"],
-  },
-
-  {
-    title: "ماكينة تقطيع الخضار",
-    category: "kitchen",
-    description: "ماكينة تقطيع الخضار بسعة كبيرة، مناسبة للمطاعم السريعة",
-    icon: ["fas", "utensils"],
-  },
-  {
-    title: "خلاط صناعي 10 لتر",
-    category: "kitchen",
-    description: "خلاط صناعي قوي بسعة كبيرة، مناسب للمطاعم والحلويات",
-    icon: ["fas", "utensils"],
-  },
-  {
-    title: "فرن غاز 4 شعلات",
-    category: "kitchen",
-    description: "فرن غاز احترافي بـ 4 شعلات، مناسب للمطاعم والمطابخ الصغيرة",
-    icon: ["fas", "utensils"],
-  },
-  //   <!-- ماكينات السلاش والثلج -->
-  {
-    title: "ماكينة سلاش مزدوجة",
-    category: "ice",
-    description: "ماكينة سلاش مزدوجة بمشروبين مختلفين، مناسبة للمقاهي",
-    icon: ["fas", "glass-whiskey"],
-  },
-  {
-    title: "ماكينة ثلج تجاري",
-    category: "ice",
-    description: "ماكينة ثلج تجارية بإنتاجية عالية، مناسبة للمطاعم والمقاهي",
-    icon: ["fas", "glass-whiskey"],
-  },
-  //       <!-- الشوايات والقلايات -->
-  {
-    title: "شواية شاورما كهربائية",
-    category: "grills",
-    description: "شواية شاورما كهربائية احترافية بسعة كبيرة، مناسبة للمطاعم",
-    icon: ["fas", "fire"],
-  },
-  {
-    title: "قلاية بطاطس مزدوجة",
-    category: "grills",
-    description: "قلاية بطاطس مزدوجة بسعة كبيرة، مناسبة للمطاعم السريعة",
-    icon: ["fas", "fire"],
-  },
-  {
-    title: "شواية بروستد",
-    category: "grills",
-    description: "شواية بروستد احترافية بتحكم دقيق في درجة الحرارة",
-    icon: ["fas", "fire"],
-  },
-]
-const products2 = [
   {
     name: "industrial_refrigerator_2m",
     title: "براد صناعي 2 متر",
     description: "براد صناعي بسعة تخزين كبيرة، مناسب للمطاعم الكبيرة.",
     category: "refrigerators",
     icon: "fas fa-industry",
+    img: "/cooler_2m.webp",
+    vertical: true,
   },
   {
     name: "cake_display_refrigerator",
@@ -155,6 +96,8 @@ const products2 = [
     description: "براد عرض خاص بالحلويات والكيك بواجهة زجاجية.",
     category: "refrigerators",
     icon: "fas fa-cake",
+    img: "/cake_cooler.webp",
+    vertical: true,
   },
   {
     name: "vertical_icecream_freezer",
@@ -162,6 +105,8 @@ const products2 = [
     description: "براد متخصص لعرض الآيس كريم بدرجة حرارة مناسبة.",
     category: "refrigerators",
     icon: "fas fa-ice-cream",
+    img: "/ice_cooler.webp",
+    vertical: true,
   },
   {
     name: "dairy_cheese_refrigerator",
@@ -169,6 +114,8 @@ const products2 = [
     description: "براد مخصص للألبان والأجبان بتحكم دقيق في درجة الحرارة.",
     category: "refrigerators",
     icon: "fas fa-cheese",
+    img: "/cheese_cooler.webp",
+    vertical: true,
   },
   {
     name: "meat_poultry_refrigerator",
@@ -176,6 +123,8 @@ const products2 = [
     description: "براد عميق التبريد لتخزين اللحوم والدواجن الطازجة.",
     category: "refrigerators",
     icon: "fas fa-drumstick-bite",
+    img: "/meat_cooler.webp",
+    vertical: true,
   },
   {
     name: "juice_display_refrigerator",
@@ -183,6 +132,8 @@ const products2 = [
     description: "براد عرض للعصائر والمشروبات الباردة.",
     category: "refrigerators",
     icon: "fas fa-wine-bottle",
+    img: "/juice_cooler.webp",
+    vertical: true,
   },
   {
     name: "service_table_refrigerator",
@@ -190,6 +141,8 @@ const products2 = [
     description: "براد مسطح مدمج مع طاولة عمل للمطابخ الاحترافية.",
     category: "refrigerators",
     icon: "fas fa-table",
+    img: "/table_cooler.webp",
+    vertical: true,
   },
   {
     name: "upright_freezer_300l",
@@ -197,6 +150,8 @@ const products2 = [
     description: "فريزر عمودي بسعة كبيرة للتجميد السريع والتخزين الطويل.",
     category: "refrigerators",
     icon: "fas fa-box-open",
+    img: "/deep_cooler.webp",
+    vertical: true,
   },
   {
     name: "grill_spatchcock_chicken",
@@ -232,6 +187,8 @@ const products2 = [
     description: "قلاية بطاطا بخزانين مستقلين، مناسبة للمطاعم السريعة.",
     category: "fryers_grills",
     icon: "fa-solid fa-bacon",
+    img: "/fryer.webp",
+    vertical: true,
   },
   {
     name: "falafel_fryer",
@@ -239,6 +196,8 @@ const products2 = [
     description: "قلاية متخصصة للفلافل بتصميم عميق ومناسب.",
     category: "fryers_grills",
     icon: "fa-solid fa-bacon",
+    img: "/falafel_fryer.webp",
+    vertical: true,
   },
   {
     name: "large_fryer_mbruma",
@@ -246,6 +205,8 @@ const products2 = [
     description: "قلاية مخصصة للمبرومات بحجم كبير.",
     category: "fryers_grills",
     icon: "fa-solid fa-bacon",
+    img: "/rolled_freyer.webp",
+    vertical: true,
   },
   {
     name: "chrome_grill_60cm",
@@ -367,7 +328,7 @@ const products2 = [
     icon: "fas fa-bread-slice",
   },
 ]
-const filters2 = [
+const filters = [
   { name: "all", label: "الكل", icon: "fas fa-th-large" },
   { name: "refrigerators", label: "برادات", icon: "fas fa-snowflake" },
   { name: "grills", label: "شوايات", icon: "fas fa-fire" },
@@ -380,12 +341,31 @@ const filters2 = [
 ]
 
 const filteredProducts = computed(() => {
-  if (selectedFilter.value === "all") return products2
-  return products2.filter((p) => p.category === selectedFilter.value)
+  if (selectedFilter.value === "all") return products
+  return products.filter((p) => p.category === selectedFilter.value)
 })
 </script>
 
 <style scoped>
+.hero {
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  padding: 130px 20px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 0px 2px 5px black;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 30px;
+}
 body {
   direction: rtl;
   font-family: "Tajawal", sans-serif;

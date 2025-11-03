@@ -1,13 +1,17 @@
 <template>
   <div v-if="product" class="relative">
     <div class="category bg-white rounded-md overflow-hidden cursor-pointer" @click="openModal">
-      <div
-        class="category-img flex items-center justify-center bg-no-repeat bg-cooler-hero bg-cover"
-        :class="product.bgClass"
-      ></div>
+      <div class="category-img overflow-hidden w-full">
+        <img
+          :src="product.img"
+          :alt="product.img"
+          class="w-full object-contain"
+          :class="product.vertical ? 'h-full' : 'h-auto'"
+        />
+      </div>
       <div class="category-content">
         <h3>{{ product.title }}</h3>
-        <p>{{ product.subtitle }}</p>
+        <p>{{ product.subtitle ?? product.description }}</p>
         <font-awesome-icon :icon="product.icon" />
       </div>
     </div>
@@ -23,15 +27,13 @@
             @click="closeModal"
             class="absolute top-2 right-2 bg-black/60 leading-none hover:bg-black text-white rounded-full p-2 z-10 text-sm cursor-pointer"
           >
-            ✕
+            <font-awesome-icon icon="fa-solid fa-xmark" class="w-3" />
           </button>
-
-          <!-- Image Wrapper (maintains aspect ratio nicely) -->
-          <div class="flex items-center justify-center max-h-[85vh]">
+          <div class="flex items-center justify-center max-h-[85vh] bg-white rounded-lg">
             <img
               :src="product.img"
               :alt="product.bgClass"
-              class="w-full object-cover max-h-[85vh] rounded-xl shadow-lg"
+              class="w-full object-contain max-h-[85vh] rounded-xl shadow-lg"
             />
           </div>
         </div>
@@ -46,20 +48,19 @@ const props = defineProps({
     type: {
       title: String,
       subtitle: String,
+      description: String,
       icon: String,
       img: String,
       bgClass: String,
+      vertical: Boolean | undefined,
     },
     required: true,
   },
 })
 
 const showBg = ref(false)
-const onClick = () => {
-  showBg.value = true
-}
-
 const openModal = () => {
+  if (!props.product.img) return
   showBg.value = true
   document.body.style.overflow = "hidden" // prevent background scroll
 }
@@ -106,5 +107,8 @@ const closeModal = () => {
 .img-size {
   width: calc(95vh - 10px);
   height: calc(95vh - 10px);
+}
+svg.w-3 {
+  width: 12px !important;
 }
 </style>
