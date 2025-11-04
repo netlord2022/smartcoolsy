@@ -77,7 +77,6 @@ const closeMenu = () => {
 </script>
 
 <style scoped>
-/* ...existing code... */
 .logo-sub {
   font-size: 14px;
   color: #e74c3c;
