@@ -3,6 +3,12 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[functions]
+  node_bundler = "esbuild"
+  included_files = [
+    "node_modules/contentful/**"
+  ]
+
 [dev]
   functionsPort = 9999
   port = 5174
