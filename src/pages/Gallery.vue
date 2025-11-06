@@ -7,7 +7,7 @@
     </div>
   </section>
   <!-- قسم معرض الصور -->
-  <section class="gallery" ref="gallery">
+  <section class="gallery overflow-x-hidden" ref="gallery">
     <div class="container mx-auto">
       <div class="section-title">
         <h2>معرض الصور</h2>
@@ -100,7 +100,7 @@ const thumbnailsConfig = {
     },
   },
   wrapAround: true,
-  touchDrag: true,
+  touchDrag: { threshold: 0.8 },
   gap: 10,
   autoplay: 5000,
 }
