@@ -19,6 +19,7 @@ export default {
         aboutMainHero: "url('/about-main-hero.webp')",
         contactHero: "url('/contact-hero.webp')",
         productsHero: "url('/products-hero.webp')",
+        galleryHero: "url('/gallery-hero.webp')",
       },
     },
   },
