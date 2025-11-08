@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, nextTick, onMounted } from "vue"
 import ProductCard from "../components/ProductCard.vue"
 const products = computed(() => [
   {
@@ -134,6 +134,32 @@ function submitForm() {
   email.value = ""
   message.value = ""
 }
+const images = ["/images/slider (1).webp", "/images/slider (2).webp", "/images/slider (3).webp"]
+
+const preloadedImages = (urls) => {
+  return Promise.all(
+    urls.map(
+      (url) =>
+        new Promise((resolve, reject) => {
+          const img = new Image()
+          img.decodeing = "async"
+          img.loading = "eager"
+          img.src = url
+          img.onload = () => resolve(url)
+          img.onerror = () => reject(url)
+        })
+    )
+  )
+}
+onMounted(async () => {
+  await nextTick()
+  const run = () => preloadedImages(images)
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(run)
+  } else {
+    setTimeout(run, 200)
+  }
+})
 </script>
 <style scoped>
 /* قسم الهيرو */

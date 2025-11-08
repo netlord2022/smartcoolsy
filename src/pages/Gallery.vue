@@ -20,7 +20,13 @@
           :key="index"
           class="mx-auto self-center flex justify-center justify-self-center gallery-slide image-container"
         >
-          <img :src="`/images/${image}`" alt="Gallery Image" class="gallery-image" />
+          <img
+            :src="`/images/${image}`"
+            alt="Gallery Image"
+            class="gallery-image"
+            :loading="index < 2 ? 'eager' : 'lazy'"
+            :fetchpriority="index < 2 ? 'high' : 'low'"
+          />
         </Slide>
       </Carousel>
 
@@ -28,12 +34,20 @@
         id="thumbnails"
         v-bind="thumbnailsConfig"
         v-model="currentSlide"
+        :autoplay="autoplay"
         @slide-start="handleSlideStart"
       >
         <Slide v-for="(image, index) in images" :key="index">
           <template #default="{ currentIndex, isActive }">
             <div :class="['thumbnail', { 'is-active': isActive }]" @click="slideTo(currentIndex)">
-              <img :src="`/images/${image}`" :alt="image" class="thumbnail-image" />
+              <img
+                :src="`/images/${image}`"
+                :alt="image"
+                class="thumbnail-image"
+                :loading="index < 2 ? 'eager' : 'lazy'"
+                :fetchpriority="index < 2 ? 'high' : 'low'"
+                @load="handleImageLoad(index)"
+              />
             </div>
           </template>
         </Slide>
@@ -58,6 +72,23 @@ const slideTo = (nextSlide) => (currentSlide.value = nextSlide)
 const handleSlideStart = () => {
   console.log("slide start")
   gallery.value.click()
+}
+
+const loadedcount = ref(0)
+const autoplay = ref(0)
+const handleImageLoad = (index) => {
+  loadedcount.value += 1
+  console.log(" images loaded", loadedcount.value, index, currentSlide.value)
+  if (loadedcount.value > 4) {
+    autoplay.value = 6000
+    console.log("autoplay on")
+  } else if (
+    (currentSlide.value > loadedcount.value - 2 || currentSlide.value > index - 2) &&
+    loadedcount.value < 200
+  ) {
+    autoplay.value = 0
+    console.log("jump to slide", currentSlide.value, loadedcount.value - 2)
+  }
 }
 
 const galleryConfig = {
@@ -102,7 +133,6 @@ const thumbnailsConfig = {
   wrapAround: true,
   touchDrag: { threshold: 0.8 },
   gap: 10,
-  autoplay: 5000,
 }
 
 const images = Array.from({ length: 212 }, (_, i) => `slider (${i + 1}).webp`)
