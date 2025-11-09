@@ -21,11 +21,13 @@
           class="mx-auto self-center flex justify-center justify-self-center gallery-slide image-container"
         >
           <img
-            :src="`/images/${image}`"
+            :src="srcList[index] || PLACEHOLDER"
             alt="Gallery Image"
             class="gallery-image"
-            :loading="index < 2 ? 'eager' : 'lazy'"
-            :fetchpriority="index < 2 ? 'high' : 'low'"
+            :loading="index < 3 ? 'eager' : 'lazy'"
+            :decoding="index < 3 ? 'sync' : 'async'"
+            :fetchpriority="index < 3 ? 'high' : 'low'"
+            @load="handleImageLoad(index)"
           />
         </Slide>
       </Carousel>
@@ -41,12 +43,12 @@
           <template #default="{ currentIndex, isActive }">
             <div :class="['thumbnail', { 'is-active': isActive }]" @click="slideTo(currentIndex)">
               <img
-                :src="`/images/${image}`"
+                :src="srcList[index] || PLACEHOLDER"
                 :alt="image"
                 class="thumbnail-image"
-                :loading="index < 2 ? 'eager' : 'lazy'"
-                :fetchpriority="index < 2 ? 'high' : 'low'"
-                @load="handleImageLoad(index)"
+                :loading="index < 3 ? 'eager' : 'lazy'"
+                :fetchpriority="index < 3 ? 'high' : 'low'"
+                :decoding="index < 3 ? 'sync' : 'async'"
               />
             </div>
           </template>
@@ -64,10 +66,31 @@ import "vue3-carousel/carousel.css"
 import { Carousel, Slide, Navigation } from "vue3-carousel"
 import { ref, useTemplateRef } from "vue"
 
+const images = Array.from({ length: 212 }, (_, i) => `slider (${i + 1}).webp`)
+
+// tiny inline placeholder to avoid network requests before real src is set
+const PLACEHOLDER = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+
+// initially set only first 3 images to real src (high priority), others null so they don't load
+const srcList = ref(images.map((img, i) => (i < 3 ? `/images/${img}` : null)))
+
 const currentSlide = ref(0)
 const gallery = useTemplateRef("gallery")
 
-const slideTo = (nextSlide) => (currentSlide.value = nextSlide)
+const slideTo = (nextSlide) => {
+  // if user clicks a thumbnail that wasn't loaded yet — reveal it immediately
+  if (!srcList.value[nextSlide]) {
+    srcList.value[nextSlide] = `/images/${images[nextSlide]}`
+    // prefetch neighbours for smoothness
+    const nbrs = [nextSlide - 1, nextSlide + 1]
+    nbrs.forEach((n) => {
+      if (n >= 0 && n < images.length && !srcList.value[n]) {
+        srcList.value[n] = `/images/${images[n]}`
+      }
+    })
+  }
+  currentSlide.value = nextSlide
+}
 
 const handleSlideStart = () => {
   console.log("slide start")
@@ -76,21 +99,71 @@ const handleSlideStart = () => {
 
 const loadedcount = ref(0)
 const autoplay = ref(0)
+
+// track which indexes we've counted as loaded to avoid double-counting
+const loadedSet = new Set()
+
+// called when a visible / main carousel <img> finishes loading
 const handleImageLoad = (index) => {
+  console.log("current, loaded, index: ", currentSlide.value, loadedcount.value, index)
+  // only count if a real src was assigned (not the placeholder)
+  if (!srcList.value[index]) return
+  if (loadedSet.has(index)) return
+  loadedSet.add(index)
   loadedcount.value += 1
-  console.log(" images loaded", loadedcount.value, index, currentSlide.value)
+
+  // when the first 3 prioritized images have loaded, start sequential reveal
+  if (loadedcount.value >= 3) {
+    startRevealRemaining()
+  }
   if (loadedcount.value > 4) {
     autoplay.value = 6000
     console.log("autoplay on")
-  } else if (
-    (currentSlide.value > loadedcount.value - 2 || currentSlide.value > index - 2) &&
-    loadedcount.value < 200
-  ) {
+  } else if (currentSlide.value > index - 2 && loadedcount.value < 200) {
     autoplay.value = 0
-    console.log("jump to slide", currentSlide.value, loadedcount.value - 2)
+    console.log("autoplay off")
   }
 }
 
+// Count loads from the main (large) carousel images only.
+// When the first 3 are loaded we begin revealing the rest in small batches.
+let revealStarted = false
+
+// preload one image and assign to reactive list only after it finishes downloading
+const loadImage = (index) => {
+  return new Promise((resolve) => {
+    if (srcList.value[index]) {
+      resolve(index)
+      return
+    }
+    const url = `/images/${images[index]}`
+    const img = new Image()
+    img.onload = () => {
+      // assign after successful download so DOM <img> will use cache and emit load
+      srcList.value[index] = url
+      resolve(index)
+    }
+    img.onerror = () => {
+      // on failure assign anyway to avoid infinite retries (or keep placeholder if you prefer)
+      srcList.value[index] = url
+      resolve(index)
+    }
+    img.src = url
+  })
+}
+
+// sequential reveal: wait for each image to finish before loading the next
+const startRevealRemaining = async () => {
+  if (revealStarted) return
+  revealStarted = true
+
+  for (let i = 3; i < images.length; i++) {
+    if (srcList.value[i]) continue // skip if user already requested it
+    await loadImage(i)
+    // small delay to give network breathing room on slow connections
+    await new Promise((r) => setTimeout(r, 80))
+  }
+}
 const galleryConfig = {
   itemsToShow: 1,
   wrapAround: true,
@@ -134,8 +207,6 @@ const thumbnailsConfig = {
   touchDrag: { threshold: 0.8 },
   gap: 10,
 }
-
-const images = Array.from({ length: 212 }, (_, i) => `slider (${i + 1}).webp`)
 </script>
 <style scoped>
 .hero {
