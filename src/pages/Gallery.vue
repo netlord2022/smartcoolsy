@@ -19,6 +19,7 @@
           v-for="(image, index) in images"
           :key="index"
           class="mx-auto self-center flex justify-center justify-self-center gallery-slide image-container"
+          :class="{ 'image-container-loaded': !!srcList[index] }"
         >
           <img
             :src="srcList[index] || PLACEHOLDER"
@@ -55,7 +56,12 @@
         </Slide>
 
         <template #addons>
-          <Navigation />
+          <Navigation
+            :class="[
+              { 'next-hidden': currentSlide > loadedcount - 3 },
+              { 'prev-hidden': currentSlide < 2 && loadedcount < 212 },
+            ]"
+          />
         </template>
       </Carousel>
     </div>
@@ -208,7 +214,7 @@ const thumbnailsConfig = {
   gap: 10,
 }
 </script>
-<style scoped>
+<style>
 .hero {
   background-size: cover;
   background-position: top;
@@ -315,7 +321,7 @@ img {
   position: relative;
   cursor: pointer;
 }
-.image-container:hover {
+.image-container-loaded:hover {
   overflow: visible;
   position: fixed;
   z-index: 777;
@@ -329,9 +335,16 @@ img {
   transition: all 0.5s ease;
 }
 
-.image-container:hover img {
+.image-container-loaded:hover img {
   object-fit: contain;
   transform: scale(1.05);
   background-color: #000;
+}
+
+.carousel__next.next-hidden {
+  display: none !important;
+}
+.carousel__prev.prev-hidden {
+  display: none !important;
 }
 </style>

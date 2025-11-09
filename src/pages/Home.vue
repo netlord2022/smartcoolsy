@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from "vue"
+import { ref, computed, nextTick, onMounted, onUnmounted } from "vue"
 import ProductCard from "../components/ProductCard.vue"
 const products = computed(() => [
   {
@@ -142,7 +142,7 @@ const preloadedImages = (urls) => {
       (url) =>
         new Promise((resolve, reject) => {
           const img = new Image()
-          img.decodeing = "async"
+          img.decoding = "async"
           img.loading = "eager"
           img.src = url
           img.onload = () => resolve(url)
@@ -151,13 +151,30 @@ const preloadedImages = (urls) => {
     )
   )
 }
+// schedule preloading and allow cancellation on unmount
+let idleId = null
+let timerId = null
+
+const run = () => preloadedImages(images)
+
 onMounted(async () => {
   await nextTick()
-  const run = () => preloadedImages(images)
   if ("requestIdleCallback" in window) {
-    requestIdleCallback(run)
+    idleId = requestIdleCallback(run)
   } else {
-    setTimeout(run, 200)
+    timerId = setTimeout(run, 200)
+  }
+})
+
+onUnmounted(() => {
+  // cancel scheduled callbacks when component unmounts
+  if (idleId != null && "cancelIdleCallback" in window) {
+    cancelIdleCallback(idleId)
+    idleId = null
+  }
+  if (timerId != null) {
+    clearTimeout(timerId)
+    timerId = null
   }
 })
 </script>
