@@ -19,15 +19,17 @@
           v-for="(image, index) in images"
           :key="index"
           class="mx-auto self-center flex justify-center justify-self-center gallery-slide image-container"
-          :class="{ 'image-container-loaded': !!srcList[index] }"
         >
           <img
             :src="srcList[index] || PLACEHOLDER"
-            alt="Gallery Image"
+            :alt="image"
             class="gallery-image"
             :loading="index < 3 ? 'eager' : 'lazy'"
             :decoding="index < 3 ? 'sync' : 'async'"
             :fetchpriority="index < 3 ? 'high' : 'low'"
+            width="412"
+            height="450"
+            @click="openModal(srcList[index])"
             @load="handleImageLoad(index)"
           />
         </Slide>
@@ -49,6 +51,8 @@
                 class="thumbnail-image"
                 :loading="index < 3 ? 'eager' : 'lazy'"
                 :fetchpriority="index < 3 ? 'high' : 'low'"
+                height="200"
+                width="145"
                 :decoding="index < 3 ? 'sync' : 'async'"
               />
             </div>
@@ -65,6 +69,30 @@
         </template>
       </Carousel>
     </div>
+    <transition name="fade">
+      <div
+        v-if="currentImage"
+        class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+        @click.self="closeModal"
+      >
+        <div class="relative max-w-5xl w-full">
+          <!-- Close Button -->
+          <button
+            @click="closeModal"
+            class="absolute top-2 right-2 bg-black/60 leading-none hover:bg-black text-white rounded-full p-2 z-10 text-sm cursor-pointer"
+          >
+            <font-awesome-icon icon="fa-solid fa-xmark" class="w-3" />
+          </button>
+          <div class="flex items-center justify-center max-h-[85vh] bg-white rounded-lg">
+            <img
+              :src="currentImage"
+              :alt="currentImage"
+              class="w-full object-contain max-h-[85vh] rounded-xl shadow-lg"
+            />
+          </div>
+        </div>
+      </div>
+    </transition>
   </section>
 </template>
 <script setup>
@@ -82,6 +110,19 @@ const srcList = ref(images.map((img, i) => (i < 3 ? `/images/${img}` : null)))
 
 const currentSlide = ref(0)
 const gallery = useTemplateRef("gallery")
+const currentImage = ref(null)
+const openModal = (image) => {
+  if (!image) return
+  currentImage.value = image
+  autoplay.value = 0
+  document.body.style.overflow = "hidden" // prevent background scroll
+}
+
+const closeModal = () => {
+  currentImage.value = null
+  autoplay.value = 6000
+  document.body.style.overflow = "auto"
+}
 
 const slideTo = (nextSlide) => {
   // if user clicks a thumbnail that wasn't loaded yet — reveal it immediately
@@ -122,7 +163,7 @@ const handleImageLoad = (index) => {
   if (loadedcount.value >= 3) {
     startRevealRemaining()
   }
-  if (loadedcount.value > 4) {
+  if (loadedcount.value > 4 && !currentImage.value) {
     autoplay.value = 6000
     console.log("autoplay on")
   } else if (currentSlide.value > index - 2 && loadedcount.value < 200) {
@@ -167,7 +208,7 @@ const startRevealRemaining = async () => {
     if (srcList.value[i]) continue // skip if user already requested it
     await loadImage(i)
     // small delay to give network breathing room on slow connections
-    await new Promise((r) => setTimeout(r, 80))
+    await new Promise((r) => setTimeout(r, 2))
   }
 }
 const galleryConfig = {
@@ -321,24 +362,9 @@ img {
   position: relative;
   cursor: pointer;
 }
-.image-container-loaded:hover {
-  overflow: visible;
-  position: fixed;
-  z-index: 777;
-  max-height: 80vh;
-  top: 45px;
-  bottom: 45px;
-  margin: auto;
-}
 
 .image-container img {
   transition: all 0.5s ease;
-}
-
-.image-container-loaded:hover img {
-  object-fit: contain;
-  transform: scale(1.05);
-  background-color: #000;
 }
 
 .carousel__next.next-hidden {
