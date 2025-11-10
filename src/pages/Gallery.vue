@@ -255,7 +255,7 @@ const thumbnailsConfig = {
   gap: 10,
 }
 </script>
-<style>
+<style scoped>
 .hero {
   background-size: cover;
   background-position: top;
@@ -329,7 +329,8 @@ const thumbnailsConfig = {
   z-index: 22;
 }
 
-img {
+.thumbnail-image,
+.gallery-image {
   border-radius: 8px;
   width: 100%;
   height: 100%;
@@ -366,7 +367,8 @@ img {
 .image-container img {
   transition: all 0.5s ease;
 }
-
+</style>
+<style>
 .carousel__next.next-hidden {
   display: none !important;
 }
