@@ -159,6 +159,8 @@ const products = [
     description: "شواية فروج مشوي ميكانيكية بمحرك قوي.",
     category: "grills",
     icon: "fas fa-drumstick-bite",
+    img: "/grill_spatchcock_chicken.webp",
+    vertical: true,
   },
   {
     name: "electric_broasted_machine",
@@ -166,6 +168,8 @@ const products = [
     description: "ماكينة بروستد كهربائية بتحكم رقمي في الحرارة.",
     category: "grills",
     icon: "fas fa-drumstick-bite",
+    img: "/electric_broasted_machine.webp",
+    vertical: true,
   },
   {
     name: "stuffed_chicken_grill",
@@ -173,6 +177,8 @@ const products = [
     description: "شواية خاصة للفروج المحشي بتدوير ذاتي.",
     category: "grills",
     icon: "fas fa-drumstick-bite",
+    img: "/stuffed_chicken_grill.webp",
+    vertical: true,
   },
   {
     name: "charcoal_shawarma_grill",
@@ -180,6 +186,8 @@ const products = [
     description: "شواية شاورما تعمل على الفحم لإعطاء نكهة تقليدية.",
     category: "grills",
     icon: "fa-solid fa-jar-wheat",
+    img: "/charcoal_shawarma_grill.webp",
+    vertical: true,
   },
   {
     name: "double_fryer_potato",
@@ -214,6 +222,8 @@ const products = [
     description: "غريل كروم مقاوم للصدأ بمساحة طهي كبيرة.",
     category: "fryers_grills",
     icon: "fas fa-border-all",
+    img: "/chrome_grill_60cm.webp",
+    vertical: true,
   },
   {
     name: "water_dispenser_public",
@@ -221,6 +231,8 @@ const products = [
     description: "براد ماء بارد وساخن للمساجد والمؤسسات.",
     category: "water_coolers",
     icon: "fas fa-tint",
+    img: "/water_dispenser_public.webp",
+    vertical: true,
   },
   {
     name: "central_water_cooling_system",
@@ -228,6 +240,8 @@ const products = [
     description: "نظام تبريد مركزي لمياه الشرب للفنادق والمستشفيات.",
     category: "water_coolers",
     icon: "fas fa-water",
+    img: "/central_water_cooling_system.webp",
+    vertical: true,
   },
   {
     name: "stainless_service_table",
@@ -235,13 +249,17 @@ const products = [
     description: "طاولة عمل ستانلس ستيل مقاومة للصدأ.",
     category: "tables_sinks",
     icon: "fas fa-table",
+    img: "/stainless_service_table.webp",
+    vertical: true,
   },
   {
     name: "double_sink_unit",
-    title: "مجلة غسيل مزدوجة",
-    description: "مجلة غسيل ستانلس بمغسلتين منفصلتين.",
+    title: "مجلى غسيل مزدوج",
+    description: "مجلى غسيل ستانلس بمغسلتين منفصلتين.",
     category: "tables_sinks",
     icon: "fas fa-sink",
+    img: "/double_sink_unit.webp",
+    vertical: true,
   },
   {
     name: "meat_grinder_1_5hp",
@@ -249,6 +267,8 @@ const products = [
     description: "فرامة لحمة صناعية بمحرك قوي.",
     category: "grinders_mixers",
     icon: "fas fa-blender",
+    img: "/meat_grinder_1_5hp.webp",
+    vertical: true,
   },
   {
     name: "hummus_mayo_mixer",
@@ -256,6 +276,8 @@ const products = [
     description: "خلاط احترافي لتحضير الحمص والمايونيز بكميات كبيرة.",
     category: "grinders_mixers",
     icon: "fas fa-blender",
+    img: "/hummus_mayo_mixer.webp",
+    vertical: true,
   },
   {
     name: "cake_mixer",
@@ -263,6 +285,8 @@ const products = [
     description: "ماكينة خفق كاتو بسرعات متعددة.",
     category: "grinders_mixers",
     icon: "fa-brands fa-mixer",
+    img: "/cake_mixer.webp",
+    vertical: true,
   },
   {
     name: "potato_slicer",
@@ -270,6 +294,8 @@ const products = [
     description: "ماكينة تقطيع البطاطا بأنواع مختلفة من الشرائح.",
     category: "grinders_mixers",
     icon: "fas fa-cut",
+    img: "/potato_slicer.webp",
+    vertical: true,
   },
   {
     name: "pistachio_grinder",
@@ -277,13 +303,17 @@ const products = [
     description: "ماكينة طحن الفستق والبذور الزيتية.",
     category: "grinders_mixers",
     icon: "fas fa-mortar-pestle",
+    img: "/pistachio_grinder.webp",
+    vertical: true,
   },
   {
     name: "cheese_grater_machine",
-    title: "برشة جبنة",
+    title: "براشة جبنة",
     description: "ماكينة برش الجبنة بسرعة عالية.",
     category: "grinders_mixers",
     icon: "fa-solid fa-cheese",
+    img: "/cheese_grater_machine.webp",
+    vertical: true,
   },
   {
     name: "domestic_ice_machine",
@@ -291,6 +321,8 @@ const products = [
     description: "ماكينة ثلج محلية الصنع بإنتاجية 50 كغ/يوم.",
     category: "ice_machines",
     icon: "fas fa-icicles",
+    img: "/domestic_ice_machine.webp",
+    vertical: true,
   },
   {
     name: "imported_ice_machine",
@@ -298,6 +330,8 @@ const products = [
     description: "ماكينة ثلج مستوردة بإنتاجية 100 كغ/يوم.",
     category: "ice_machines",
     icon: "fas fa-icicles",
+    img: "/imported_ice_machine.webp",
+    vertical: true,
   },
   {
     name: "professional_icecream_machine",
@@ -305,6 +339,8 @@ const products = [
     description: "ماكينة تحضير الآيس كريم الاحترافية.",
     category: "ice_machines",
     icon: "fas fa-ice-cream",
+    img: "/professional_icecream_machine.webp",
+    vertical: true,
   },
   {
     name: "slush_machine",
@@ -312,6 +348,8 @@ const products = [
     description: "ماكينة سلاش مزدوجة للمقاهي.",
     category: "ice_machines",
     icon: "fas fa-glass-whiskey",
+    img: "/slush_machine.webp",
+    vertical: true,
   },
   {
     name: "gas_crepe_heater",
@@ -319,6 +357,8 @@ const products = [
     description: "سخان كريب بسطح حجري، يعمل على الغاز.",
     category: "sandwich_heaters",
     icon: "fa-solid fa-kitchen-set",
+    img: "/gas_crepe_heater.webp",
+    vertical: true,
   },
   {
     name: "electric_cover_heater",
@@ -326,6 +366,8 @@ const products = [
     description: "سخان كوفر بأنواع متعددة، يعمل على الكهرباء.",
     category: "sandwich_heaters",
     icon: "fas fa-bread-slice",
+    img: "/electric_cover_heater.webp",
+    vertical: true,
   },
 ]
 const filters = [

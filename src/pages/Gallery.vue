@@ -24,9 +24,9 @@
             :src="srcList[index] || PLACEHOLDER"
             :alt="image"
             class="gallery-image"
-            :loading="index < 3 ? 'eager' : 'lazy'"
-            :decoding="index < 3 ? 'sync' : 'async'"
-            :fetchpriority="index < 3 ? 'high' : 'low'"
+            :loading="index < 3 || index > images.length - 2 ? 'eager' : 'lazy'"
+            :decoding="index < 3 || index > images.length - 2 ? 'sync' : 'async'"
+            :fetchpriority="index < 3 || index > images.length - 2 ? 'high' : 'low'"
             width="412"
             height="450"
             @click="openModal(srcList[index])"
@@ -49,11 +49,11 @@
                 :src="srcList[index] || PLACEHOLDER"
                 :alt="image"
                 class="thumbnail-image"
-                :loading="index < 3 ? 'eager' : 'lazy'"
-                :fetchpriority="index < 3 ? 'high' : 'low'"
+                :loading="index < 3 || index > images.length - 2 ? 'eager' : 'lazy'"
+                :fetchpriority="index < 3 || index > images.length - 2 ? 'high' : 'low'"
                 height="200"
                 width="145"
-                :decoding="index < 3 ? 'sync' : 'async'"
+                :decoding="index < 3 || index > images.length - 2 ? 'sync' : 'async'"
               />
             </div>
           </template>
@@ -106,7 +106,9 @@ const images = Array.from({ length: 212 }, (_, i) => `slider (${i + 1}).webp`)
 const PLACEHOLDER = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
 
 // initially set only first 3 images to real src (high priority), others null so they don't load
-const srcList = ref(images.map((img, i) => (i < 3 ? `/images/${img}` : null)))
+const srcList = ref(
+  images.map((img, i) => (i < 3 || i > images.length - 2 ? `/images/${img}` : null))
+)
 
 const currentSlide = ref(0)
 const gallery = useTemplateRef("gallery")
@@ -199,16 +201,35 @@ const loadImage = (index) => {
   })
 }
 
-// sequential reveal: wait for each image to finish before loading the next
+// reveal strategy:
+// 1) load first 12 images (indexes 0..11) asynchronously in parallel (we already have 0..2)
+// 2) then assign the remaining src entries all at once so the browser starts loading them concurrently
 const startRevealRemaining = async () => {
   if (revealStarted) return
   revealStarted = true
 
-  for (let i = 3; i < images.length; i++) {
-    if (srcList.value[i]) continue // skip if user already requested it
-    await loadImage(i)
-    // small delay to give network breathing room on slow connections
-    await new Promise((r) => setTimeout(r, 2))
+  const total = images.length
+  const firstPriorityCount = Math.min(12, total)
+
+  // collect indexes to load in the first parallel batch (skip those already set)
+  const firstBatch = []
+  for (let i = 3; i < firstPriorityCount; i++) {
+    if (!srcList.value[i]) firstBatch.push(i)
+  }
+
+  // load first batch in parallel; don't fail the whole process if one image errors
+  try {
+    await Promise.all(firstBatch.map((idx) => loadImage(idx)))
+  } catch (e) {
+    // loadImage resolves on error as well, but guard here in case of unexpected rejects
+    console.warn("one or more images in the first batch failed to load", e)
+  }
+
+  // assign the rest all at once so browser starts fetching many images concurrently
+  for (let i = firstPriorityCount; i < total; i++) {
+    if (!srcList.value[i]) {
+      srcList.value[i] = `/images/${images[i]}`
+    }
   }
 }
 const galleryConfig = {
