@@ -3,11 +3,9 @@
   <div class="w-full p-4 flex justify-center text-white bg-[#1a3a5f]">
     <div class="container top-bar-container">
       <div class="flex gap-2 items-center">
-        <div class="grid text-sm sm:text-base grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+        <div class="grid text-sm sm:text-base grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
           <a href="tel:0944590519" class="hover:text-red-500"> 0944590519</a>
           <a href="tel:0982502556" class="hover:text-red-500"> 0982502556</a>
-          <a href="tel:0112265268" class="hover:text-red-500"> 0112265268</a>
-          <a href="tel:0112264420" class="hover:text-red-500"> 0112264420</a>
         </div>
         <font-awesome-icon :icon="['fas', 'phone']" class="text-green-500" />
       </div>

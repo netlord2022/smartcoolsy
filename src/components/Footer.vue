@@ -33,8 +33,6 @@
           <h3>اتصل بنا</h3>
           <p><font-awesome-icon :icon="['fas', 'phone']" /> 0944590519</p>
           <p><font-awesome-icon :icon="['fas', 'phone']" /> 0982502556</p>
-          <p><font-awesome-icon :icon="['fas', 'phone']" /> 0112265268</p>
-          <p><font-awesome-icon :icon="['fas', 'phone']" /> 0112264420</p>
           <div class="social-links mt-2">
             <a href="https://www.facebook.com/smartcoolsy26" class="facebook-btn" target="_blank">
               <font-awesome-icon :icon="['fab', 'facebook-f']" />

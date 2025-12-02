@@ -30,8 +30,6 @@
               <h4>أرقام الهواتف</h4>
               <p><a href="tel:0944590519" class="contact-link">0944590519</a></p>
               <p><a href="tel:0982502556" class="contact-link">0982502556</a></p>
-              <p><a href="tel:0112265268" class="contact-link">0112265268</a></p>
-              <p><a href="tel:0112264420" class="contact-link">0112264420</a></p>
             </div>
           </div>
           <div class="contact-item">
