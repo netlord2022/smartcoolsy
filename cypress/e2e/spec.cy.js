@@ -1,6 +1,6 @@
 describe("template spec", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:5173/")
+    cy.visit("http://localhost:4173/")
   })
 
   it("front page can be opened", () => {
