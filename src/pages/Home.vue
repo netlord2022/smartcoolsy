@@ -3,7 +3,7 @@
   <section class="hero bg-hero">
     <div class="container mx-auto">
       <h1>الحلول المتكاملة لتجهيزات الفنادق والمطاعم</h1>
-      <router-link to="/products" class="btn">استعرض المنتجات</router-link>
+      <router-link data-sy="products" to="/products" class="btn">استعرض المنتجات</router-link>
     </div>
   </section>
 
