@@ -52,8 +52,8 @@
         </div>
         <div class="feature">
           <font-awesome-icon icon="fas fa-shipping-fast" />
-          <h3>توصيل سريع</h3>
-          <p>نقدم خدمة توصيل سريعة وآمنة لجميع أنحاء المملكة في أسرع وقت ممكن.</p>
+          <h3>شحن سريع</h3>
+          <p>نقدم خدمة شحن آمنة لجميع أنحاء الوطن العربي في أسرع وقت ممكن.</p>
         </div>
         <div class="feature">
           <font-awesome-icon icon="fas fa-tools" />

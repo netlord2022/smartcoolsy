@@ -30,8 +30,8 @@
       <div class="features-grid">
         <div class="feature">
           <font-awesome-icon :icon="['fas', 'shipping-fast']" />
-          <h3>توصيل سريع</h3>
-          <p>خدمة توصيل سريعة لجميع أنحاء المملكة</p>
+          <h3>شحن سريع</h3>
+          <p>خدمة شحن لجميع أنحاء الوطن العربي</p>
         </div>
         <div class="feature">
           <font-awesome-icon :icon="['fas', 'fa-tools']" />
