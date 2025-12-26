@@ -1,13 +1,15 @@
 {
   "name": "smartcoolsy",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview",
-    "format": "prettier --write ."
+    "preview": "vite preview --port 4173 --strictPort",
+    "format": "prettier --write .",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.21",
+    "cypress": "^15.8.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.12",
     "vite": "^7.1.2"
